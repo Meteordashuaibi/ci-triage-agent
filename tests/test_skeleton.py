@@ -132,3 +132,11 @@ def test_individual_stages_raise_not_implemented() -> None:
     dummy_scored = ScoredHypotheses(scored=[])
     with pytest.raises(NotImplementedError):
         plan(dummy_raw, dummy_parsed, dummy_scored)
+
+def test_intentional_failure_for_ci_exploration() -> None:
+    """Intentionally fails so we have a real failed CI run to analyze.
+
+    Remove this test once Stage 1 is implemented and tested against
+    a real failed run.
+    """
+    assert 1 == 2, "this failure is intentional — used to generate a failed CI run for Stage 1 development"
