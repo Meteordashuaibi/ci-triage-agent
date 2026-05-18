@@ -8,6 +8,7 @@ license = { text = "MIT" }
 authors = [{ name = "Meteor" }]
 dependencies = [
     "anthropic>=0.39.0",
+    "gitpython>=3.1.50",
     "pydantic>=2.8.0",
     "pygithub",
     "python-dotenv>=1.0.0",
