@@ -83,60 +83,14 @@ def test_scored_hypothesis_clamps_confidence_to_unit_interval() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_pipeline_raises_not_implemented_at_stage_one() -> None:
-    """Today, run_pipeline should fail at Stage 1 with NotImplementedError."""
-    request = RunRequest(repo_url="https://github.com/owner/repo", run_id=1)
-    with pytest.raises(NotImplementedError):
-        run_pipeline(request)
 
-
-def test_individual_stages_raise_not_implemented() -> None:
-    """Each stage independently raises NotImplementedError until implemented."""
-    from src.hypothesize import hypothesize
-    from src.ingest import ingest
-    from src.parse import parse
-    from src.plan import plan
-    from src.retrieve import retrieve
-    from src.validate_stage import validate
-
-    request = RunRequest(repo_url="https://github.com/owner/repo", run_id=1)
-
-    # We construct dummy inputs just to confirm the type signatures match.
-    # Each call should raise NotImplementedError before doing any real work.
-    with pytest.raises(NotImplementedError):
-        ingest(request)
-
-    dummy_raw = RawRunData(
-        repo_full_name="owner/repo",
-        run_id=1,
-        workflow_name="ci",
-        head_sha="abc",
-        raw_logs="",
-        workflow_yaml="",
+def test_pipeline_fails_at_stage_two_not_stage_one() -> None:
+    """Stage 1 is now implemented. Pipeline should get past ingest()
+    and fail at Stage 2 (parse returns ok) then Stage 3 (retrieve)
+    which still raises NotImplementedError."""
+    request = RunRequest(
+        repo_url="https://github.com/Meteordashuaibi/ci-triage-agent",
+        run_id=26022017834,
     )
     with pytest.raises(NotImplementedError):
-        parse(dummy_raw)
-
-    dummy_parsed = ParsedFailure(failure_type=FailureType.IMPORT, error_message="x")
-    with pytest.raises(NotImplementedError):
-        retrieve(dummy_raw, dummy_parsed)
-
-    dummy_context = RetrievedContext(snippets=[])
-    with pytest.raises(NotImplementedError):
-        hypothesize(dummy_parsed, dummy_context)
-
-    dummy_hypotheses = Hypotheses(hypotheses=[], model_used="none")
-    with pytest.raises(NotImplementedError):
-        validate(dummy_hypotheses, dummy_context)
-
-    dummy_scored = ScoredHypotheses(scored=[])
-    with pytest.raises(NotImplementedError):
-        plan(dummy_raw, dummy_parsed, dummy_scored)
-
-def test_intentional_failure_for_ci_exploration() -> None:
-    """Intentionally fails so we have a real failed CI run to analyze.
-
-    Remove this test once Stage 1 is implemented and tested against
-    a real failed run.
-    """
-    assert 1 == 2, "this failure is intentional — used to generate a failed CI run for Stage 1 development"
+        run_pipeline(request)

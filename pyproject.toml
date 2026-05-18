@@ -9,6 +9,7 @@ authors = [{ name = "Meteor" }]
 dependencies = [
     "anthropic>=0.39.0",
     "pydantic>=2.8.0",
+    "pygithub",
     "python-dotenv>=1.0.0",
 ]
 
