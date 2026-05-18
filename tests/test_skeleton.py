@@ -81,20 +81,3 @@ def test_scored_hypothesis_clamps_confidence_to_unit_interval() -> None:
 # stage is implemented, removing the `NotImplementedError` test forces us
 # to add a real behavioral test for it.
 # ---------------------------------------------------------------------------
-
-
-
-def test_pipeline_fails_at_stage_two_not_stage_one() -> None:
-    """Stage 1 is now implemented. Pipeline should get past ingest()
-    and fail at Stage 2 (parse returns ok) then Stage 3 (retrieve)
-    which still raises NotImplementedError."""
-    request = RunRequest(
-        repo_url="https://github.com/Meteordashuaibi/ci-triage-agent",
-        run_id=26022017834,
-    )
-    with pytest.raises(NotImplementedError):
-        run_pipeline(request)
-
-def test_temp_for_stage3_fix() -> None:
-    """Temporary: fresh failed run with correct line numbers."""
-    assert 1 == 2, "intentional — for Stage 3 fix validation"
