@@ -1,21 +1,23 @@
 """Stage 6 — Plan.
 
-Takes the scored hypotheses and produces the final, human-readable triage
-report. Picks the top hypothesis, lists alternatives, and writes concrete
-next steps.
+Assembles the final triage report from scored hypotheses.
+No LLM call here — just organizing the results.
 
-This stage is intentionally human-in-the-loop: it does NOT modify code or
-open PRs. It only produces a report for a developer to read.
-
-Inputs : ParsedFailure + ScoredHypotheses
+Inputs : RawRunData + ParsedFailure + ScoredHypotheses
 Outputs: TriageReport
-
-Implementation comes in W10.
 """
 
 from __future__ import annotations
 
-from .models import ParsedFailure, RawRunData, ScoredHypotheses, TriageReport
+from .models import (
+    FailureType,
+    ParsedFailure,
+    RawRunData,
+    ScoredHypotheses,
+    TriageReport,
+)
+
+CONFIDENCE_THRESHOLD = 0.4
 
 
 def plan(
@@ -23,17 +25,44 @@ def plan(
     parsed: ParsedFailure,
     scored: ScoredHypotheses,
 ) -> TriageReport:
-    """Build the final triage report.
+    """Build the final triage report."""
 
-    Args:
-        raw: Used for repo_full_name and run_id metadata.
-        parsed: Used for failure_type.
-        scored: The ranked hypotheses to report.
+    # 没有任何假设，或者失败类型不支持
+    if not scored.scored or parsed.failure_type == FailureType.UNSUPPORTED:
+        return TriageReport(
+            repo_full_name=raw.repo_full_name,
+            run_id=raw.run_id,
+            failure_type=parsed.failure_type,
+            top_hypothesis=scored.scored[0] if scored.scored else None,
+            alternative_hypotheses=[],
+            next_steps=["Failure type is not supported by this tool."],
+            status="unsupported",
+        )
 
-    Returns:
-        TriageReport ready to print to the CLI.
+    top = scored.scored[0]
+    alternatives = scored.scored[1:]
 
-    Raises:
-        NotImplementedError: Until W10, when this stage is implemented.
-    """
-    raise NotImplementedError("Stage 6 (plan) — implementation lands in W10")
+    # 置信度太低，说明 LLM 也不确定
+    if top.confidence < CONFIDENCE_THRESHOLD:
+        status = "low_confidence"
+        next_steps = [
+            f"Low confidence ({top.confidence:.0%}) — manual investigation recommended.",
+            f"Most likely cause: {top.hypothesis.root_cause}",
+            top.hypothesis.suggested_fix,
+        ]
+    else:
+        status = "ok"
+        next_steps = [
+            top.hypothesis.suggested_fix,
+            f"Check {parsed.failing_file} around line {parsed.failing_line}.",
+        ]
+
+    return TriageReport(
+        repo_full_name=raw.repo_full_name,
+        run_id=raw.run_id,
+        failure_type=parsed.failure_type,
+        top_hypothesis=top,
+        alternative_hypotheses=alternatives,
+        next_steps=next_steps,
+        status=status,
+    )
