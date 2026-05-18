@@ -94,3 +94,7 @@ def test_pipeline_fails_at_stage_two_not_stage_one() -> None:
     )
     with pytest.raises(NotImplementedError):
         run_pipeline(request)
+
+def test_temp_for_stage3_fix() -> None:
+    """Temporary: fresh failed run with correct line numbers."""
+    assert 1 == 2, "intentional — for Stage 3 fix validation"
