@@ -24,10 +24,7 @@ CONTEXT_WINDOW = 20  # lines before and after the failing line
 
 
 def _clone_repo(repo_full_name: str) -> tempfile.TemporaryDirectory:
-    """Clone the repo into a fresh temp directory and return it.
-
-    The caller is responsible for calling .cleanup() when done.
-    """
+    """Clone the repo into a fresh temp directory and return it."""
     token = os.getenv("GITHUB_TOKEN")
     url = f"https://{token}@github.com/{repo_full_name}.git"
     tmp = tempfile.TemporaryDirectory()
@@ -44,6 +41,7 @@ def _read_snippet(
     """Read lines around center_line from a file in the cloned repo.
 
     Returns None if the file does not exist.
+    If center_line is out of range, reads the whole file.
     """
     file_path = repo_dir / relative_path
     if not file_path.exists():
@@ -52,6 +50,11 @@ def _read_snippet(
     lines = file_path.read_text(encoding="utf-8", errors="replace").splitlines()
     start = max(0, center_line - CONTEXT_WINDOW - 1)
     end = min(len(lines), center_line + CONTEXT_WINDOW)
+
+    # 行号超出文件范围时，读整个文件
+    if start >= end:
+        start = 0
+        end = len(lines)
 
     return CodeSnippet(
         file_path=relative_path,
@@ -70,7 +73,7 @@ def retrieve(raw: RawRunData, parsed: ParsedFailure) -> RetrievedContext:
     try:
         repo_dir = Path(tmp.name)
 
-        # Always retrieve the failing file if we know it
+        # 优先用 Stage 2 找到的失败文件
         if parsed.failing_file:
             line = parsed.failing_line or 1
             snippet = _read_snippet(
@@ -81,6 +84,15 @@ def retrieve(raw: RawRunData, parsed: ParsedFailure) -> RetrievedContext:
             )
             if snippet:
                 snippets.append(snippet)
+
+        # 如果没拿到任何片段，fallback：找第一个测试文件
+        if not snippets:
+            for test_file in repo_dir.rglob("test_*.py"):
+                relative = str(test_file.relative_to(repo_dir)).replace("\\", "/")
+                snippet = _read_snippet(repo_dir, relative, 1, reason="fallback test file")
+                if snippet:
+                    snippets.append(snippet)
+                    break
 
     finally:
         tmp.cleanup()
