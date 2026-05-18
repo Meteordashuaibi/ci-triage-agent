@@ -94,3 +94,6 @@ def test_pipeline_fails_at_stage_two_not_stage_one() -> None:
     )
     with pytest.raises(NotImplementedError):
         run_pipeline(request)
+def test_temporary_failure_for_stage3_testing() -> None:
+    """Temporary: generates a fresh failed run for Stage 3 development."""
+    assert 1 == 2, "intentional failure for Stage 3 testing"
