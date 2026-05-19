@@ -1,128 +1,96 @@
-# ci-triage
+# ci-triage-agent
 
-Diagnose failing GitHub Actions runs with an LLM agent. Given a failed run URL, `ci-triage` pulls the logs, locates the failure in the source tree, and produces a ranked list of root-cause hypotheses with confidence scores and suggested fixes.
+An LLM agent that diagnoses failing GitHub Actions runs. Given a repo URL and
+a failed run ID, it pulls the logs, locates the failure in the source tree, and
+produces root-cause hypotheses with confidence scores and suggested fixes.
 
-[![PyPI](https://img.shields.io/pypi/v/ci-triage.svg)](https://pypi.org/project/ci-triage/)
-[![Python](https://img.shields.io/pypi/pyversions/ci-triage.svg)](https://pypi.org/project/ci-triage/)
-[![CI](https://img.shields.io/github/actions/workflow/status/<owner>/ci-triage/ci.yml?branch=main)](https://github.com/<owner>/ci-triage/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/Meteordashuaibi/ci-triage-agent/ci.yml?branch=main)](https://github.com/Meteordashuaibi/ci-triage-agent/actions)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-```
-$ ci-triage analyze https://github.com/acme/widgets/actions/runs/1234567890
+## Demo
+$ python cli.py analyze https://github.com/owner/repo --run-id 12345
+Analyzing run 12345 in https://github.com/owner/repo...
+repo:         owner/repo
+run_id:       12345
+failure_type: assertion
+status:       ok
+=== Top Hypothesis (confidence: 87%) ===
+Root cause:   Fixture renamed in commit a3f1c2d but test still references old name
+Suggested fix:Update the fixture reference in tests/test_orders.py:84
+=== Next Steps ===
 
-  Stage 1/6  Ingest      ✓  pulled 8.2 MB of logs, 12 recent commits
-  Stage 2/6  Parse       ✓  assertion failure at tests/test_orders.py:84
-  Stage 3/6  Retrieve    ✓  17 files, 2 recent diffs
-  Stage 4/6  Hypothesize ✓  3 candidates
-  Stage 5/6  Validate    ✓  scored against retrieved context
-  Stage 6/6  Plan        ✓
+Update the fixture reference in tests/test_orders.py:84
+Check tests/test_orders.py around line 84.
 
-  Top hypothesis (confidence 0.86)
-    Fixture `mock_payment_gateway` was renamed to `payment_gateway_mock`
-    in commit a3f1c2d but tests/test_orders.py:84 still references the
-    old name.
 
-    Suggested fix
-      tests/test_orders.py:84
-      - def test_order_charges_card(mock_payment_gateway):
-      + def test_order_charges_card(payment_gateway_mock):
+## Benchmark
 
-  See `ci-triage analyze --explain` for the full report.
-```
+Evaluated on **48 real failed GitHub Actions runs** across 6 open-source Python
+projects (requests, flask, httpx, pydantic, pytest, ci-triage-agent itself).
 
-## Installation
+| Metric | Result |
+|---|---|
+| Failure type classification accuracy | **100%** (48/48) |
+| Supported failure types | assertion, import, collection, exception |
+| Projects tested | 6 |
 
-```bash
-pip install ci-triage
-```
+## How it works
 
-Requires Python 3.11+ and [ripgrep](https://github.com/BurntSushi/ripgrep).
+A fixed 6-stage pipeline. Each stage has a typed input and output enforced by
+Pydantic — bad data cannot enter the next stage.
+RunRequest
+│
+▼  Stage 1: Ingest       fetch logs + commits from GitHub API
+│
+▼  Stage 2: Parse        extract failure type, file, line from pytest output
+│
+▼  Stage 3: Retrieve     clone repo, extract relevant code snippets
+│
+▼  Stage 4: Hypothesize  LLM generates structured root-cause hypotheses
+│
+▼  Stage 5: Validate     LLM scores each hypothesis against code evidence
+│
+▼  Stage 6: Plan         assemble final human-readable triage report
+│
+▼  TriageReport
 
 ## Quick start
 
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-...
-export GITHUB_TOKEN=ghp_...
+git clone https://github.com/Meteordashuaibi/ci-triage-agent
+cd ci-triage-agent
 
-ci-triage analyze <run-url>
+# install dependencies
+uv sync
+
+# set environment variables
+cp .env.example .env
+# edit .env and add GITHUB_TOKEN and DEEPSEEK_API_KEY
+
+# run
+python cli.py analyze https://github.com/owner/repo --run-id 12345
 ```
 
-The run URL is the page you land on when you click a failed check in a pull request — e.g. `https://github.com/<owner>/<repo>/actions/runs/<id>`.
-
-## How it works
-
-`ci-triage` runs a fixed six-stage pipeline. Each stage has a typed input and output, and every step is recorded to a local SQLite database for replay and debugging.
-
-```mermaid
-flowchart LR
-    A[Run URL] --> B[Ingest]
-    B --> C[Parse]
-    C --> D[Retrieve]
-    D --> E[Hypothesize]
-    E --> F[Validate]
-    F --> G[Plan]
-    G --> H[Report]
-
-    B -.- I[(GitHub API)]
-    D -.- J[(ripgrep + AST)]
-    E -.- K[(LLM)]
-    F -.- K
-```
-
-| Stage | What it does |
-|---|---|
-| **Ingest** | Fetches logs, workflow YAML, and recent commits via the GitHub API. |
-| **Parse** | Extracts the failing file, line, and failure category from pytest output. |
-| **Retrieve** | Collects the failing file, its import chain, and recent diffs using ripgrep and AST traversal. |
-| **Hypothesize** | Generates structured root-cause candidates with the LLM, validated against a Pydantic schema. |
-| **Validate** | Re-evaluates each hypothesis against the retrieved code and assigns a confidence score. |
-| **Plan** | Produces a human-readable repair suggestion. `ci-triage` never modifies your code. |
-
-## Configuration
-
-Configuration is read from `pyproject.toml` under `[tool.ci-triage]`, or from `~/.config/ci-triage/config.toml`.
-
-```toml
-[tool.ci-triage]
-model = "claude-sonnet-4-5"
-max_context_files = 20
-cache_dir = ".ci-triage-cache"
-```
-
-Environment variables:
+## Environment variables
 
 | Variable | Purpose |
 |---|---|
-| `ANTHROPIC_API_KEY` | Required. API key for the LLM. |
-| `GITHUB_TOKEN` | Required for private repos and to avoid rate limits. |
-| `CI_TRIAGE_LOG_LEVEL` | `debug`, `info` (default), `warning`, `error`. |
-
-## Commands
-
-```
-ci-triage analyze <run-url>         Diagnose a failed run
-ci-triage replay <run-id>           Replay a previous diagnosis from local cache
-ci-triage eval <suite>              Run the eval suite and print accuracy metrics
-ci-triage --help
-```
+| `GITHUB_TOKEN` | Required. GitHub personal access token (repo scope). |
+| `DEEPSEEK_API_KEY` | Required. DeepSeek API key for LLM calls. |
 
 ## Supported failures
 
-Currently supports Python projects using pytest, for the following failure categories:
+Python projects using pytest only. Four failure categories:
 
-- Assertion failures
-- Import errors
-- Collection errors
-- Unhandled exceptions
+- **Assertion** — `assert x == y` failures
+- **Import** — `ModuleNotFoundError`, `ImportError`
+- **Collection** — pytest collection errors (syntax errors, etc.)
+- **Exception** — all other unhandled exceptions
 
-Other languages, test frameworks, and failure types are out of scope.
+## Tech stack
 
-## Documentation
-
-- [Architecture](docs/architecture.md)
-- [Evaluation methodology](docs/evaluation.md)
-- [Contributing](CONTRIBUTING.md)
-- [Changelog](CHANGELOG.md)
+Python 3.11 · Anthropic SDK · Pydantic v2 · PyGithub · GitPython · uv
 
 ## License
 
