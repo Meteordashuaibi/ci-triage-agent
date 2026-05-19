@@ -1,0 +1,386 @@
+[
+  {
+    "repo_url": "https://github.com/psf/requests",
+    "run_id": 25747498310,
+    "workflow_name": "Tests",
+    "ground_truth_failure_type": "exception",
+    "failing_file": "\\hostedtoolcache\\windows\\Python\\3.10.11\\x64\\lib\\site-packages\\urllib3\\util\\retry.py",
+    "failing_line": 543
+  },
+  {
+    "repo_url": "https://github.com/psf/requests",
+    "run_id": 25686655353,
+    "workflow_name": "Tests",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "tests\\test_requests.py",
+    "failing_line": 404
+  },
+  {
+    "repo_url": "https://github.com/psf/requests",
+    "run_id": 25686595644,
+    "workflow_name": "Tests",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "tests/test_requests.py",
+    "failing_line": 404
+  },
+  {
+    "repo_url": "https://github.com/psf/requests",
+    "run_id": 25290718842,
+    "workflow_name": "Copilot code review",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/psf/requests",
+    "run_id": 25290502057,
+    "workflow_name": "Copilot code review",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/psf/requests",
+    "run_id": 25289158185,
+    "workflow_name": "Publish to PyPI",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/psf/requests",
+    "run_id": 25288973531,
+    "workflow_name": "Publish to PyPI",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/psf/requests",
+    "run_id": 25236506502,
+    "workflow_name": "Type Check",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pallets/flask",
+    "run_id": 25964629914,
+    "workflow_name": "Tests",
+    "ground_truth_failure_type": "collection",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pallets/flask",
+    "run_id": 25643147195,
+    "workflow_name": "Tests",
+    "ground_truth_failure_type": "collection",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pallets/flask",
+    "run_id": 25643049930,
+    "workflow_name": "Tests",
+    "ground_truth_failure_type": "collection",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pallets/flask",
+    "run_id": 25642949077,
+    "workflow_name": "Tests",
+    "ground_truth_failure_type": "collection",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pallets/flask",
+    "run_id": 25642949072,
+    "workflow_name": "pre-commit",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pallets/flask",
+    "run_id": 25280056335,
+    "workflow_name": "pre-commit",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pallets/flask",
+    "run_id": 25280056331,
+    "workflow_name": "Tests",
+    "ground_truth_failure_type": "collection",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pallets/flask",
+    "run_id": 25254683058,
+    "workflow_name": "Tests",
+    "ground_truth_failure_type": "collection",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/encode/httpx",
+    "run_id": 22547825202,
+    "workflow_name": "Test Suite",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/encode/httpx",
+    "run_id": 22379030162,
+    "workflow_name": "Test Suite",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/encode/httpx",
+    "run_id": 22368072496,
+    "workflow_name": "Test Suite",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/encode/httpx",
+    "run_id": 22367742645,
+    "workflow_name": "Test Suite",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/encode/httpx",
+    "run_id": 22367610318,
+    "workflow_name": "Test Suite",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "tests/test_utils.py",
+    "failing_line": 151
+  },
+  {
+    "repo_url": "https://github.com/encode/httpx",
+    "run_id": 22366275831,
+    "workflow_name": "Test Suite",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "tests/test_utils.py",
+    "failing_line": 151
+  },
+  {
+    "repo_url": "https://github.com/encode/httpx",
+    "run_id": 22365864207,
+    "workflow_name": "Test Suite",
+    "ground_truth_failure_type": "exception",
+    "failing_file": "httpx/_utils.py",
+    "failing_line": 190
+  },
+  {
+    "repo_url": "https://github.com/encode/httpx",
+    "run_id": 22365804838,
+    "workflow_name": "Test Suite",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pydantic/pydantic",
+    "run_id": 26019401861,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pydantic/pydantic",
+    "run_id": 26016759880,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pydantic/pydantic",
+    "run_id": 26012889585,
+    "workflow_name": "Upload previews",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pydantic/pydantic",
+    "run_id": 26004005319,
+    "workflow_name": "Upload previews",
+    "ground_truth_failure_type": "unsupported",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pydantic/pydantic",
+    "run_id": 26003584252,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pydantic/pydantic",
+    "run_id": 26003203366,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pydantic/pydantic",
+    "run_id": 25996256804,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pydantic/pydantic",
+    "run_id": 25995695619,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pytest-dev/pytest",
+    "run_id": 26020105828,
+    "workflow_name": "test",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "test_sample.py",
+    "failing_line": 5
+  },
+  {
+    "repo_url": "https://github.com/pytest-dev/pytest",
+    "run_id": 25993713737,
+    "workflow_name": "test",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "test_sample.py",
+    "failing_line": 5
+  },
+  {
+    "repo_url": "https://github.com/pytest-dev/pytest",
+    "run_id": 25977390249,
+    "workflow_name": "Doc Check Links",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pytest-dev/pytest",
+    "run_id": 25853138144,
+    "workflow_name": "test",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "test_sample.py",
+    "failing_line": 5
+  },
+  {
+    "repo_url": "https://github.com/pytest-dev/pytest",
+    "run_id": 25784023744,
+    "workflow_name": "test",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "test_sample.py",
+    "failing_line": 5
+  },
+  {
+    "repo_url": "https://github.com/pytest-dev/pytest",
+    "run_id": 25721912930,
+    "workflow_name": "Copilot code review",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/pytest-dev/pytest",
+    "run_id": 25713236969,
+    "workflow_name": "test",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "test_sample.py",
+    "failing_line": 5
+  },
+  {
+    "repo_url": "https://github.com/pytest-dev/pytest",
+    "run_id": 25622547871,
+    "workflow_name": "Copilot code review",
+    "ground_truth_failure_type": "exception",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/Meteordashuaibi/ci-triage-agent",
+    "run_id": 26027313199,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "src/ingest.py",
+    "failing_line": 33
+  },
+  {
+    "repo_url": "https://github.com/Meteordashuaibi/ci-triage-agent",
+    "run_id": 26027116480,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "import",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/Meteordashuaibi/ci-triage-agent",
+    "run_id": 26026928451,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "import",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/Meteordashuaibi/ci-triage-agent",
+    "run_id": 26026759021,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "import",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/Meteordashuaibi/ci-triage-agent",
+    "run_id": 26026533513,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "import",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/Meteordashuaibi/ci-triage-agent",
+    "run_id": 26026147312,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "import",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/Meteordashuaibi/ci-triage-agent",
+    "run_id": 26026107408,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "import",
+    "failing_file": null,
+    "failing_line": null
+  },
+  {
+    "repo_url": "https://github.com/Meteordashuaibi/ci-triage-agent",
+    "run_id": 26025936710,
+    "workflow_name": "CI",
+    "ground_truth_failure_type": "assertion",
+    "failing_file": "src/ingest.py",
+    "failing_line": 33
+  }
+]
