@@ -1,23 +1,28 @@
 # Progress Log
 
 ## Project
-CI Failure Triage Agent — LLM agent that analyzes failed GitHub Actions runs and produces root cause hypotheses.
+CI Failure Triage Agent — LLM agent that analyzes failed GitHub Actions runs.
 GitHub repo: https://github.com/Meteordashuaibi/ci-triage-agent
 
 ## Completed
-- W1: 全部 5 个 practice demo 完成
-- W2: 全部完成 ✅
-  - [x] GitHub repo + README v1
-  - [x] 6 阶段 state machine 骨架 + Pydantic 数据模型
-  - [x] pyproject.toml + uv + GitHub Actions CI（绿勾）
-- W3: 全部完成 ✅
-  - [x] 装 PyGithub，连通 GitHub API
-  - [x] 探索 workflow runs / jobs / logs 结构
-  - [x] 实现 Stage 1 (ingest)：拉 logs + commits，返回 RawRunData
-  - [x] 5 个真实 repo 的 ingest 测试全部通过
+- W1: 5 个 practice demo ✅
+- W2: 骨架 + CI ✅
+- W3: Stage 1 (ingest) ✅
+- W4: Stage 2 (parse) + 10 个测试 ✅
+- W5: Stage 3 (retrieve) ✅
+- W6: Stage 4 (hypothesize) ✅
+- W9: Stage 5 (validate) ✅
+- W10: Stage 6 (plan) + CLI ✅
+- W11: Eval 套件 — 48 cases, 100% accuracy ✅
+- W12: README v2 ✅
 
-## 当前任务
-W4 (5/22–5/31): Stage 2 — Parse
-- 从 pytest 输出里提取失败文件、行号、失败类型
-- 支持 4 种失败类型：assertion / import / collection / exception
-- 写解析准确率测试 30 个样本
+## 下一步
+- 第 1 篇博客（W7）
+- Logfire tracing（W11，可选）
+- LLM caching（W12，可选）
+- 第 2 项目（W14-15）
+- 简历定稿（W16）
+
+## 项目路径
+D:\AAAubco\project\ci-triage-agent
+Tech stack：Python 3.11, uv, Pydantic, PyGithub, GitPython, DeepSeek API
