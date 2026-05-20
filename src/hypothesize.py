@@ -48,6 +48,8 @@ Rules:
 - Respond with JSON only, no markdown, no explanation outside the JSON
 """
 
+MAX_USER_MESSAGE_CHARS = 3000
+
 
 def _build_user_message(parsed: ParsedFailure, context: RetrievedContext) -> str:
     """Build the user message from parsed failure + code context."""
@@ -72,7 +74,13 @@ def _build_user_message(parsed: ParsedFailure, context: RetrievedContext) -> str
         for commit in context.relevant_commits:
             parts.append(f"- {commit.sha[:7]} {commit.author}: {commit.message.splitlines()[0]}")
 
-    return "\n".join(parts)
+    result = "\n".join(parts)
+
+    # 截断太长的内容，避免超出 DeepSeek Flash 的 context window
+    if len(result) > MAX_USER_MESSAGE_CHARS:
+        result = result[:MAX_USER_MESSAGE_CHARS] + "\n\n[content truncated to fit context window]"
+
+    return result
 
 
 def hypothesize(parsed: ParsedFailure, context: RetrievedContext) -> Hypotheses:
@@ -87,15 +95,22 @@ def hypothesize(parsed: ParsedFailure, context: RetrievedContext) -> Hypotheses:
         input_tokens = 0
         output_tokens = 0
     else:
-        response = _CLIENT.messages.create(
-            model=MODEL,
-            max_tokens=1024,
-            system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": user_message}],
-        )
-        raw = next(
-            block.text for block in response.content if hasattr(block, "text")
-        )
+        raw = None
+        for attempt in range(3):
+            response = _CLIENT.messages.create(
+                model=MODEL,
+                max_tokens=2048,
+                system=SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": user_message}],
+            )
+            text_blocks = [b for b in response.content if type(b).__name__ == "TextBlock"]
+            if text_blocks:
+                raw = text_blocks[-1].text
+                break
+            print(f"  [retry {attempt+1}/3] no TextBlock, retrying...")
+
+        if raw is None:
+            raise ValueError("No TextBlock after 3 retries")
         set_cached(SYSTEM_PROMPT, user_message, raw, MODEL)
         input_tokens = response.usage.input_tokens
         output_tokens = response.usage.output_tokens
