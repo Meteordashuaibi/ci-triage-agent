@@ -20,7 +20,6 @@ from .models import Hypotheses, Hypothesis, ParsedFailure, RetrievedContext
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
-# DeepSeek via Anthropic SDK
 _CLIENT = Anthropic(
     api_key=os.getenv("DEEPSEEK_API_KEY"),
     base_url="https://api.deepseek.com/anthropic",
@@ -80,20 +79,27 @@ def hypothesize(parsed: ParsedFailure, context: RetrievedContext) -> Hypotheses:
     """Ask the LLM for root cause hypotheses."""
     user_message = _build_user_message(parsed, context)
 
-    response = _CLIENT.messages.create(
-        model=MODEL,
-        max_tokens=1024,
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_message}],
-    )
+    from .cache import get_cached, set_cached
 
-    # DeepSeek returns ThinkingBlock before TextBlock
-    # extract the actual text response
-    raw = next(
-        block.text for block in response.content if hasattr(block, "text")
-    )
+    cached = get_cached(SYSTEM_PROMPT, user_message)
+    if cached:
+        raw = cached
+        input_tokens = 0
+        output_tokens = 0
+    else:
+        response = _CLIENT.messages.create(
+            model=MODEL,
+            max_tokens=1024,
+            system=SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": user_message}],
+        )
+        raw = next(
+            block.text for block in response.content if hasattr(block, "text")
+        )
+        set_cached(SYSTEM_PROMPT, user_message, raw, MODEL)
+        input_tokens = response.usage.input_tokens
+        output_tokens = response.usage.output_tokens
 
-    # strip markdown code fences if present
     raw = raw.strip()
     if raw.startswith("```"):
         raw = raw.split("\n", 1)[1].rsplit("```", 1)[0].strip()
@@ -104,6 +110,6 @@ def hypothesize(parsed: ParsedFailure, context: RetrievedContext) -> Hypotheses:
     return Hypotheses(
         hypotheses=hypotheses,
         model_used=MODEL,
-        input_tokens=response.usage.input_tokens,
-        output_tokens=response.usage.output_tokens,
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
     )
