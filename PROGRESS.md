@@ -18,13 +18,6 @@ GitHub repo: https://github.com/Meteordashuaibi/ci-triage-agent
 - W12: LLM response caching — hash-keyed，cache HIT 时 Stage 4 从 9s → 0s ✅
 - README v2 — benchmark + quickstart + demo output ✅
 
-## 下一步
-- 第 1 篇博客《Building a CI Failure Triage Agent: Why I'm Not Using LangChain》
-  - 已经讨论过核心论点，但还没动笔
-- Logfire 接入（SQLite tracing 已经够用，Logfire 可选）
-- 第 2 项目（Battle Plan W14-15，8 月）
-- 简历定稿（Battle Plan W16，8 月底）
-
 ## 项目配置
 - 路径: D:\AAAubco\project\ci-triage-agent
 - 环境: Windows 11 + PowerShell + .venv + uv
